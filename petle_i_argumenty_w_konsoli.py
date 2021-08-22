@@ -8,6 +8,7 @@ while number_of_packages < how_much_packages:
     
     how_is_weight=int(input("Podaj masę towaru: "))
     if how_is_weight==0:
+        lightest_packages=0
         print("Zadanie zakończono. ")
         break
     if 1<how_is_weight>10:
