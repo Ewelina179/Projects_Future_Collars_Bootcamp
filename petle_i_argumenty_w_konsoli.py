@@ -14,9 +14,9 @@ while number_of_packages < how_much_packages:
                 lightest_packages = current_package
         print("Zadanie zakończono. ")
         break
-    if 1<how_is_weight>10:
+    elif 1<how_is_weight>10:
         print("Operacja niedozwolona.")
-        continue
+        break
     else:
         if current_package + how_is_weight > 20:
             number_of_packages += 1
