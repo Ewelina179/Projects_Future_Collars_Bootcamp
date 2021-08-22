@@ -3,6 +3,7 @@ number_of_packages=0 # całkowita liczba wysłanych paczek
 whole_weight=0 # liczba wysłanych kilogramów
 current_package=0 # bieżąca paczka - licznik wagi
 lightest_packages = 20
+empty = number_of_packages * 20 - whole_weight # liczba "pustych" kilogramów
 
 while number_of_packages < how_much_packages:
     
@@ -15,6 +16,10 @@ while number_of_packages < how_much_packages:
         print("Zadanie zakończono. ")
         break
     elif 1<how_is_weight>10:
+        number_of_packages = 0
+        whole_weight = 0
+        empty = 0
+        lightest_packages = 0
         print("Operacja niedozwolona.")
         break
     else:
@@ -32,7 +37,6 @@ while number_of_packages < how_much_packages:
         elif current_package < 20:
             current_package += how_is_weight
 
-empty = number_of_packages * 20 - whole_weight # liczba "pustych" kilogramów
 print(f"Liczba paczek wysłanych {number_of_packages}, liczba wysłanych kg {whole_weight}, najlżejsza paczka wazyła {lightest_packages} kg. Brak optymalnego pakowania spowodował niezapełnienie przestrzeni, która mogłaby ważyć po wykorzystaniu {empty} kg.")
 
 
