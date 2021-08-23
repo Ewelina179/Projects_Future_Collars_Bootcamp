@@ -23,7 +23,7 @@ while current_number_of_element <= how_much_elements:
         lightest_packages = 0
         print("Operacja niedozwolona.")
         break
-    else: #tu zgrzyta. może lecieć pętla o ile bieżąca paczka gdy dodajemy elementy nie przekroczła ilości max elementów do dodania.
+    else: 
         if current_package + how_is_weight > 20:
             number_of_packages += 1
             whole_weight += current_package
@@ -39,13 +39,17 @@ while current_number_of_element <= how_much_elements:
             current_package=0
             if current_number_of_element == how_much_elements:
                 break
-        elif current_package < 20: 
+        elif current_package < 20:  #tu poprawka do ostatniego - empty bo nie uwzględniło 
             current_package += how_is_weight
             current_number_of_element += 1
             print(current_number_of_element)
             if current_number_of_element == how_much_elements:
                 whole_weight += current_package
                 number_of_packages += 1
+                if lightest_packages > current_package:
+                    lightest_packages = current_package
+                print(whole_weight)
+                print(empty)  # empty nie działa
                 break
 
 print(f"Liczba paczek wysłanych {number_of_packages}, liczba wysłanych kg {whole_weight}, najlżejsza paczka wazyła {lightest_packages} kg. Brak optymalnego pakowania spowodował niezapełnienie przestrzeni, która mogłaby ważyć po wykorzystaniu {empty} kg.")
