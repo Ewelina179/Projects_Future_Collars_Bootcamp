@@ -1,86 +1,110 @@
 import sys
-#lista wstępna - stan magazynu słownik. chyba, że czyta z pliku i tam trzymam i na starcie context managera odpalam, żeby wzięło (jak starczy czasu to i dodało do stanu początkowego)
+
 saldo = 1500
-magazyn = {"produkt1": 2, "produkt2": 5, "produkt3": 1, "produkt4": 9}
-stan_magazynowy_produktu_1 = 0
+store = {"produkt1": {"amount":2, "price": 12}, "produkt2": {"amount":2, "price": 12}, "produkt3": {"amount":2, "price": 12}, "produkt4": {"amount":2, "price": 12}}
 
 list_of_logs = []
+parameters = []
 
-commands = "saldo", "sprzedaż", "zakup", "konto", "magazyn"
+commands = "saldo", "sprzedaż", "zakup", "konto", "magazyn", "przeglad"
 
-pierwszy_argument = sys.argv[1]
+argument = sys.argv[1]
 
-while pierwszy_argument in commands:
+while argument in commands:
 
     commands2 = "saldo", "zakup", "sprzedaz", "stop"
 
-    answer = input("Podaj komendę z dostepnych: ") #lista dostępnych
+    answer = input("Podaj komendę z dostepnych: ") 
 
-    if answer == "saldo": # sprawdzam, czy wykonalne. jeśli takm działam
-        pierwsza = int(input("zmiana na koncie wyrażona w groszach"))
-        druga = input("komentarz do zmiany")
+    if answer not in commands2:
+        print("Niewłaściwa komenda.")
+        continue
+
+    if answer == "stop":
+        break
+
+    elif answer == "saldo":
+        change_in_account = float(input("Zmiana na koncie wyrażona w groszach: "))
+        saldo += change_in_account*0.01
+        comment = input("Komentarz do zmiany: ")
+        log = f"Zmieniono wartość salda o {change_in_account * 0.01} złotych. Saldo po zmianie wynosiło {saldo}."
+        list_of_logs.append(log)
+        parameters.append(change_in_account)
+        parameters.append(comment)
         
-    elif answer == "zakup": # logi do tych akcji - string, zdanie, niecha zapisuje w liście. pickle lub nie.
+    elif answer == "zakup":
         product_id = input("Podaj identyfikator produktu: ")
-        price = int(input("Podaj cenę jednostkową: "))
-        amount = int(input("Podaj liczbę sztuk: "))
-        zakup = saldo - price * number
+        price = float(input("Podaj cenę jednostkową: "))
+        current_amount = int(input("Podaj liczbę sztuk: "))
+        if price < 0 or current_amount < 0:
+            print("Liczba sztuk nie może być mniejsza od 0. Cena nie może być ujemna.")
+            continue
+        else:
+            total_price = price * current_amount
+            if saldo < total_price:
+                print("Saldo nie może być ujemne.")
+                continue
+            else:
+                saldo -= total_price
+                if not store.get(product_id):
+                    store[product_id] = {"amount":current_amount, "price": price}
+                else:
+                    amount = store[product_id]['amount']
+                    store[product_id]={'amount': amount + current_amount} # chyba słownik powinien mieć inną konstrukcję. dwie ceny - po jakiej kupujemy i po jakiej sprzedajemy. w takiej formie tym punkcie chyba nie powinien zmieniać ceny.
 
-        if saldo < 0:
-            print("Saldo nie może być ujemne.")
-            break
-        elif price < 0:
-            print("Cena nie może być ujemna.")
-            break
-        elif amount < 0:
-            print("Liczba sztuk nie może być mniejsza od 0.")
-            break
-        """
-        Jeśli saldo po zmianie jest ujemne, cena jest ujemna bądź liczba sztuk jest mniejsza od zero program zwraca błąd. Program podnosi stan magazynowy zakupionego towaru
-        """
-
-        # podnieś stan magazynowy tego towaru!!!
+                log = f"Stan magazynowy produktu {product_id} podniesiono o liczbę {current_amount}. Saldo wynosi: {saldo}" 
+                list_of_logs.append(log)
+                parameters.extend([product_id, price, current_amount]) # czy program ma zapisywać wszystkie parametry, czy tylko te, które miały wpływ na saldo? nie do końca rozumiem punkt V. właściwie wcale nie rozumiem.
 
     elif answer == "sprzedaz":
         product_id = input("Podaj identyfikator produktu: ")
-        price = int(input("Podaj cenę jednostkową: "))
-        number = int(input("Podaj liczbę sztuk: "))
-        pass
-        """
-        Program dodaje do salda cenę jednostkową pomnożoną razy liczbę sztuk. 
-         Jeśli na magazynie nie ma wystarczającej liczby sztuk, cena jest ujemna bądź liczba sztuk sprzedanych jest mniejsza od zero program zwraca błąd. Program obniża stan magazynowy zakupionego towaru.
-         """
-    elif answer == "stop": # od razu robi te z sys.argv
-        continue
+        price = float(input("Podaj cenę jednostkową: "))
+        current_amount = int(input("Podaj liczbę sztuk: "))
 
-    else:
+        if price < 0 or current_amount < 0:
+            print("Liczba sprzedanych sztuk nie może być ujemna. Cena produktu nie może być ujemna.")
+            continue # (wg założen z zadania powinno być break wszędzie)
+        if not store.get(product_id):
+            print(f"W magazynie nie ma takiego produktu: {product_id}")
+            continue
+        else:
+            if store[product_id]['amount'] < current_amount:
+                print("Brak wystarczającej liczby sztuk produktu.")
+                continue
+            else:
+                saldo += price * current_amount
+                amount = store[product_id]['amount']
+                store[product_id]={'amount': amount - current_amount}
+                log = f"Stan magazynowy produktu {product_id} zmniejszono o liczbę {current_amount}. Saldo wynosi: {saldo}." 
+                list_of_logs.append(log)
+                parameters.extend([product_id, price, current_amount])
 
-        break
+if argument == "saldo":
+    parameters.extend([float(sys.argv[2]), sys.argv[3]]) # argv3 w groszach. brak walidacji
+    # program dodaje do historii podane argumenty tak, jakby miały być wprowadzone przez standardowe wejście, przechodzi do kroku V (???)
+    print(f"Podane podczas działania programu parametry: {parameters}.")
 
-# robi co z sys argv
-    if sys.argv[1] == "saldo":
-        wartosc = int(sys.argv[2])
-        komentarz = int(sys.argv[3])
-        pass
-    elif sys.argv[1] == "sprzedaż": # uwględnić obsługę wyjątków i walidację???
-        identyfikator_produktu = sys.argv[2] # str ma być
-        cena = int(sys.argv[3])
-        liczba_sprzedanych = int(sys.argv[4])
-    elif sys.argv[1] == "zakup":
-        identyfikator_produktu = sys.argv[2]
-        cena = int(sys.argv[3])
-        liczba_zakupionych = int(sys.argv[4])
-    elif sys.argv[1] == "konto":
-        pass
-    elif sys.argv[1] == "magazyn":
-        identyfikator_produktu = sys.argv[2]
-        identyfikator_produktu = sys.argv[3] # tu pętla czy co? można by funkcje i args
-        pass
-    elif sys.argv[1] == "przegląd":
-        pass
-    else:
-        break
+elif argument == "sprzedaż":
+    parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])]) 
+    print(f"Podane podczas działania programu parametry: {parameters}.")
 
+elif argument == "zakup":
+    parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])])
+    print(f"Podane podczas działania programu parametry: {parameters}.")
+    
+elif argument == "konto":
+    print(f"Stan konta wynosi: {saldo}.")
+
+elif argument == "magazyn":
+    for el in sys.argv[2:]:
+        x = store.get(el)
+        if x:
+            print(f"Stan magazynowy dla produktu {el} wynosi: {x['amount']}.")
+        else:
+            print(f"Nie ma wskazanego produktu: {el}.")
+
+elif argument == "przeglad":
+    pass # Program wypisuje wszystkie akcje zapisane pod indeksami w zakresie [od, do] (zakresy włącznie) - ale nie podano zakresu na start. nie rozumiem - na wejściu nie podajemy jaki zakres chcemy odczytać
+    print(f"Lista akcji: {list_of_logs}.") # historia od najnowszych do najstarszych jest
 else:
-    print("Niedozwolona komenda.")
-
+    print("Niepoprawna komenda. Spróbuj ponownie.")
