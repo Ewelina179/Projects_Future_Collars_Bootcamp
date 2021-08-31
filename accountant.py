@@ -6,11 +6,11 @@ store = {"produkt1": {"amount":2, "price": 12}, "produkt2": {"amount":2, "price"
 list_of_logs = []
 parameters = []
 
-commands = "saldo", "sprzedaż", "zakup", "konto", "magazyn", "przeglad"
+COMMANDS = "saldo", "sprzedaz", "zakup", "konto", "magazyn", "przeglad"
 
 argument = sys.argv[1]
 
-while argument in commands:
+while argument in COMMANDS:
 
     commands2 = "saldo", "zakup", "sprzedaz", "stop"
 
@@ -80,16 +80,54 @@ while argument in commands:
                 parameters.extend([product_id, price, current_amount])
 
 if argument == "saldo":
-    parameters.extend([float(sys.argv[2]), sys.argv[3]]) # argv3 w groszach. brak walidacji
-    # program dodaje do historii podane argumenty tak, jakby miały być wprowadzone przez standardowe wejście, przechodzi do kroku V (???)
+    change_in_account = float(sys.argv[2])
+    saldo += change_in_account*0.01
+    comment = sys.argv[3]
+    log = f"Zmieniono wartość salda o {change_in_account * 0.01} złotych. Saldo po zmianie wynosiło {saldo}."
+    list_of_logs.append(log)
+    parameters.extend([float(sys.argv[2]), sys.argv[3]])
     print(f"Podane podczas działania programu parametry: {parameters}.")
 
-elif argument == "sprzedaż":
-    parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])]) 
+elif argument == "sprzedaz":
+    product_id = sys.argv[2]
+    price = float(sys.argv[3])
+    current_amount = int(sys.argv[4])
+    if price < 0 or current_amount < 0:
+        print("Liczba sprzedanych sztuk nie może być ujemna. Cena produktu nie może być ujemna.")
+    if not store.get(product_id):
+        print(f"W magazynie nie ma takiego produktu: {product_id}")
+    else:
+        if store[product_id]['amount'] < current_amount:
+            print("Brak wystarczającej liczby sztuk produktu.")
+        else:
+            saldo += price * current_amount
+            amount = store[product_id]['amount']
+            store[product_id]={'amount': amount - current_amount}
+            log = f"Stan magazynowy produktu {product_id} zmniejszono o liczbę {current_amount}. Saldo wynosi: {saldo}." 
+            list_of_logs.append(log)
+            parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])]) 
     print(f"Podane podczas działania programu parametry: {parameters}.")
 
 elif argument == "zakup":
-    parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])])
+    product_id = sys.argv[2]
+    price = float(sys.argv[3])
+    current_amount = int(sys.argv[4])
+    if price < 0 or current_amount < 0:
+        print("Liczba sztuk nie może być mniejsza od 0. Cena nie może być ujemna.")
+    else:
+        total_price = price * current_amount
+        if saldo < total_price:
+            print("Saldo nie może być ujemne.")
+        else:
+            saldo -= total_price
+            if not store.get(product_id):
+                store[product_id] = {"amount":current_amount, "price": price}
+            else:
+                amount = store[product_id]['amount']
+                store[product_id]={'amount': amount + current_amount} 
+            log = f"Stan magazynowy produktu {product_id} podniesiono o liczbę {current_amount}. Saldo wynosi: {saldo}" 
+            list_of_logs.append(log)
+            parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])]) 
     print(f"Podane podczas działania programu parametry: {parameters}.")
     
 elif argument == "konto":
