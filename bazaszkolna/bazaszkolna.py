@@ -30,13 +30,21 @@ while type_of in TYPE:
     elif answer == "student":
         first_name = input("Podaj imię: ")
         last_name = input("Podaj nazwisko: ")
-        class_name = input("Podaj nazwę klasy: ")
-        new_class = Class_Name(class_name)
-        student = Student(first_name, last_name, new_class)
-        new_class.add_student(student)
-        list_of_students.append(student)
-        if new_class not in list_of_classes:
+        class_type = input("Podaj nazwę klasy: ")
+        filtered = list(filter(lambda x: x.name==class_type, list_of_classes))
+        if filtered:
+            x = list(filtered)[0]
+            student = Student(first_name, last_name, filtered)
+            x.add_student(student)
+            
+        else:
+            new_class = Class_Name(class_type)
+            student = Student(first_name, last_name, new_class)
+            new_class.add_student(student)
             list_of_classes.append(new_class)
+            
+        if student not in list_of_students:
+            list_of_students.append(student) # chyba do poprawki!!! 
 
     elif answer == "teacher":
         first_name = input("Podaj imię: ")
@@ -48,18 +56,17 @@ while type_of in TYPE:
             if class_type == "":
                 break
             else:
-                for some_class in list_of_classes:
-                    if class_type in [x.name for x in list_of_classes]:
-                        some_class.add_teacher(teacher)
-                        teacher.add_class_name(some_class)
-                        teacher.show_classes() # do usunięcia
-
-                    else:
-                        new_class = Class_Name(class_type)
-                        new_class.add_teacher(teacher)
-                        list_of_classes.append(new_class)
-                        teacher.add_class_name(new_class)
-        if teacher not in list_of_teachers:     
+                filtered = list(filter(lambda x: x.name==class_type, list_of_classes))
+                if filtered:
+                    x = filtered[0]
+                    x.add_teacher(teacher)
+                    teacher.add_class_name(x)
+                else:
+                    new_class = Class_Name(class_type)
+                    new_class.add_teacher(teacher)
+                    list_of_classes.append(new_class)
+                    teacher.add_class_name(new_class)
+        if teacher not in list_of_teachers:     # to źle
             list_of_teachers.append(teacher)
 
     elif answer == "tutor":
@@ -71,61 +78,61 @@ while type_of in TYPE:
             if class_type == "":
                 break
             else:
-                filtered = [filter(lambda x: x.name==class_type, list_of_classes)][0]
-                if class_type == filtered:
-                    filtered.tutor = tutor
+                filtered = list(filter(lambda x: x.name==class_type, list_of_classes))
+                if filtered:
+                    x = filtered[0]
+                    x.tutor = tutor
                     tutor.add_class_name(filtered)
                 else:
                     new_class = Class_Name(class_type)
                     new_class.tutor = tutor
                     list_of_classes.append(new_class)
                     tutor.add_class_name(new_class)
-        if tutor not in list_of_tutors:     
+        if tutor not in list_of_tutors:     # chyba poprawka
             list_of_tutors.append(tutor)
 
 if type_of == "student":
     first_name = input("Podaj imię: ")
     last_name = input("Podaj nazwisko: ")
-    for some_student in list_of_students:
-        if some_student.first_name == first_name and some_student.last_name == last_name:
-            x = some_student.class_name      
-            if isinstance(Class_Name(x), Class_Name):
-                print(x)
-                teachers = x.show_teachers()
-                print(teachers)
-                print(x.teachers)
-                subjects = []
-                for el in teachers:
-                    subjects.append(el.subject)
-        print(f"Nauczyciele to: {teachers} i prowadzą przedmioty: {subjects}.")
+    filtered = list(filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_students))
+    if filtered:
+        this_student = filtered[0]
+        teachers_of_student=this_student.class_name.teachers
+        subjects=this_student.class_name.show_subjects()
+    else:
+        print("Nie ma takiego ucznia.")
+    print(f"Nauczyciele to: {teachers_of_student} i prowadzą przedmioty: {subjects}.")
+    
+
 elif type_of == "teacher":
     first_name = input("Podaj imię nauczyciela: ")
     last_name = input("Podaj nazwisko nauczyciela: ")    
-    for el in list_of_teachers:
-        if el.first_name == first_name and el.last_name == last_name:
-            x = el.show_classes()
-            print(x)
-            tutors_list = []
-            for el in x:
-                tutors_list.append(el.tutor)
-            print(f"Lista wychowawców, z którymi zajęcia prowadzi nauczyciel to: {tutors_list}")
+    filtered = list(filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_teachers))
+    if filtered:
+        this_teacher = filtered[0]
+        x = this_teacher.classes
+        tutors_list = []
+        for el in x:
+            tutors_list.append(el.tutor)
+        print(f"Lista wychowawców, z którymi zajęcia prowadzi nauczyciel to: {tutors_list}")
+
 elif type_of == "tutor":
     first_name = input("Podaj imię wychowawcy: ")
     last_name = input("Podaj nazwisko wychowawcy: ")
-    filtered = filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_tutors)
+    filtered = list(filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_tutors))
     if filtered:
-        x = list(filtered)[0]
-        students_list = []
-        for el in x.show_classes():
-            print(el.show_students())
-            students_list.append(el.show_students())
+        tutor = filtered[0]
+        print(tutor.show_students()) # wyprintowało reprezentację tutora #  po tej stronie jakiś błąd. bo w klasie dobrze AttributeError: 'list' object has no attribute 'students' - a przecież dodaję obiekty całe (klasy)
+        students_list = tutor.show_students()
         print(f"Lista uczniów, których prowadzi wychowawca to: {students_list}")
     else:
         print(f"Nie ma takiego tutora.")
+
 elif type_of == "class_name":
     class_name = input("Podaj nazwę klasy: ")
-    for el in list_of_classes:
-        if el.name == class_name:
-            tutor_of_class = el.tutor
-            students = el.show_students()
-        print(f"Wychowawca to {tutor_of_class}, zaś uczniowie: {students}") # BRZYDKO ale działa
+    filtered = list(filter(lambda x: x.name==class_name, list_of_classes))
+    if filtered:
+        class_type = filtered[0]
+        tutor_of_class = class_type.tutor
+        students = class_type.students
+    print(f"Wychowawca to {tutor_of_class}, zaś uczniowie: {students}")

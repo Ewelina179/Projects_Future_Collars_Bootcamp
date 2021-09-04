@@ -1,4 +1,26 @@
 
+class Class_Name:
+    def __init__(self, name, tutor=None):
+        self.name = name
+        self.tutor = tutor
+        self.teachers = []
+        self.students = []
+
+    def add_student(self, student):
+        self.students.append(student)
+
+    def add_teacher(self, teacher):
+        self.teachers.append(teacher)
+
+    def add_tutor(self, tutor):
+        self.tutors.append(tutor)
+
+    def show_subjects(self):
+        subjects = []
+        for x in self.teachers:
+            subjects.append(x.subject)
+        return subjects
+
 
 class Tutor:
 
@@ -10,9 +32,11 @@ class Tutor:
     def add_class_name(self, class_name):
         self.classes.append(class_name)
 
-    def show_classes(self):
-        classes = [x for x in self.classes]
-        return classes
+    def show_students(self):
+        students = []
+        for x in self.classes:
+            students.append(x.students)
+        return students
 
     def __repr__(self):
         return f"{self.first_name} {self.last_name}"
@@ -29,11 +53,7 @@ class Teacher:
     def add_class_name(self, class_name):
         self.classes.append(class_name)
 
-    def show_classes(self):
-        classes = [x for x in self.classes]
-        return classes
-
-    def __str__(self):
+    def __repr__(self):
         return f"{self.first_name} {self.last_name}"
 
 
@@ -45,32 +65,4 @@ class Student:
         self.class_name = class_name
 
     def __repr__(self):
-        return f"{self.first_name} {self.last_name}" #  ma nauczycieli: {self.class_name.tutors}
-
-
-class Class_Name:
-    def __init__(self, name):
-        self.name = name
-        self.tutors = None
-        self.teachers = []
-        self.students = []
-
-    def add_student(self, student):
-        self.students.append(student)
-
-    def add_teacher(self, teacher):
-        self.teachers.append(teacher)
-
-    def add_tutor(self, tutor):
-        self.tutors.append(tutor)
-
-    def show_teachers(self):
-        return [x for x in self.teachers]
-    
-    ### def show_tutors(self):
-    ###    tutors = [x for x in self.tutors] # niby powinien być jeden. ale z implementacji nie wynika ograniczenie
-    #    return tutors
-
-    def show_students(self):
-        students = [x for x in self.students]
-        return students
+        return f"{self.first_name} {self.last_name}"
