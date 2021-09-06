@@ -93,78 +93,25 @@ list_of_filtered_objects_ = [list(filter(lambda x: x.first_name == type_of[0] an
 
 for el in list_of_filtered_objects_:
     if el:
-        ell = el[0]
-        if isinstance(ell, Student):
-            this_student = el[0]
+        searched_object = el[0]
+        if isinstance(searched_object, Student):
+            this_student = searched_object
             teachers_of_student = this_student.class_name.teachers
             subjects = this_student.class_name.show_subjects()
             print(f"Nauczyciele to: {teachers_of_student} i prowadzą przedmioty: {subjects}.")
-        elif isinstance(ell, Teacher):
-            this_teacher = el[0]
+        elif isinstance(searched_object, Teacher):
+            this_teacher = searched_object
             x = this_teacher.classes
             tutors_list = []
             for el in x:
                 tutors_list.append(el.tutor)
             print(f"Lista wychowawców, z którymi zajęcia prowadzi nauczyciel to: {tutors_list}")
-        elif ell is isinstance(ell, Tutor):
-            tutor = el[0]
+        elif isinstance(searched_object, Tutor):
+            tutor = searched_object
             students_list = tutor.show_students()
             print(f"Lista uczniów, których prowadzi wychowawca to: {students_list}")
-        elif isinstance(ell, Class_Name):
-            class_type = el[0]
+        elif isinstance(searched_object, Class_Name):
+            class_type = searched_object
             tutor_of_class = class_type.tutor
             students = class_type.students
             print(f"Wychowawca to {tutor_of_class}, zaś uczniowie: {students}")
-
-"""
-
-        
-
-
-
-
-
-
-if type_of == "student":
-    first_name = input("Podaj imię: ")
-    last_name = input("Podaj nazwisko: ")
-    filtered = list(filter(lambda x: x.first_name == first_name and x.last_name == last_name, list_of_students))
-    if filtered:
-        this_student = filtered[0]
-        teachers_of_student = this_student.class_name.teachers
-        subjects = this_student.class_name.show_subjects()
-    else:
-        print("Nie ma takiego ucznia.")
-    print(f"Nauczyciele to: {teachers_of_student} i prowadzą przedmioty: {subjects}.")
-elif type_of == "teacher":
-    first_name = input("Podaj imię nauczyciela: ")
-    last_name = input("Podaj nazwisko nauczyciela: ")
-    filtered = list(filter(lambda x: x.first_name == first_name and x.last_name == last_name, list_of_teachers))
-    if filtered:
-        this_teacher = filtered[0]
-        x = this_teacher.classes
-        tutors_list = []
-        for el in x:
-            tutors_list.append(el.tutor)
-        print(f"Lista wychowawców, z którymi zajęcia prowadzi nauczyciel to: {tutors_list}")
-
-elif type_of == "tutor":
-    first_name = input("Podaj imię wychowawcy: ")
-    last_name = input("Podaj nazwisko wychowawcy: ")
-    filtered = list(filter(lambda x: x.first_name == first_name and x.last_name == last_name, list_of_tutors))
-    if filtered:
-        tutor = filtered[0]
-        students_list = tutor.show_students()
-        print(f"Lista uczniów, których prowadzi wychowawca to: {students_list}")
-    else:
-        print("Nie ma takiego tutora.")
-
-elif type_of == "class_name":
-    class_name = input("Podaj nazwę klasy: ")
-    filtered = list(filter(lambda x: x.name == class_name, list_of_classes))
-    if filtered:
-        class_type = filtered[0]
-        tutor_of_class = class_type.tutor
-        students = class_type.students
-    print(f"Wychowawca to {tutor_of_class}, zaś uczniowie: {students}")
-"""
