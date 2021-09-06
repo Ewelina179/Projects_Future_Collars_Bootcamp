@@ -22,7 +22,7 @@ while type_of in TYPE:
         continue
 
     if answer not in types_of_users:
-        print("Niewłaściwy typ uzytkownika.")
+        print("Niewłaściwy typ użytkownika.")
         continue
     elif answer == "end":
         break
@@ -33,8 +33,8 @@ while type_of in TYPE:
         class_type = input("Podaj nazwę klasy: ")
         filtered = list(filter(lambda x: x.name==class_type, list_of_classes))
         if filtered:
-            x = list(filtered)[0]
-            student = Student(first_name, last_name, filtered)
+            x = filtered[0]
+            student = Student(first_name, last_name, x)
             x.add_student(student)
             
         else:
@@ -82,7 +82,7 @@ while type_of in TYPE:
                 if filtered:
                     x = filtered[0]
                     x.tutor = tutor
-                    tutor.add_class_name(filtered)
+                    tutor.add_class_name(x)
                 else:
                     new_class = Class_Name(class_type)
                     new_class.tutor = tutor
@@ -122,7 +122,6 @@ elif type_of == "tutor":
     filtered = list(filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_tutors))
     if filtered:
         tutor = filtered[0]
-        print(tutor.show_students()) # wyprintowało reprezentację tutora #  po tej stronie jakiś błąd. bo w klasie dobrze AttributeError: 'list' object has no attribute 'students' - a przecież dodaję obiekty całe (klasy)
         students_list = tutor.show_students()
         print(f"Lista uczniów, których prowadzi wychowawca to: {students_list}")
     else:
