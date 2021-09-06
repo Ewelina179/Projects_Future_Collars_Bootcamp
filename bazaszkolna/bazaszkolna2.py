@@ -9,27 +9,16 @@ list_of_tutors = []
 
 type_of = sys.argv[1:]
 
-#TYPE = ("student", "teacher", "tutor", "class_name")
-
 while True:
-
-    types_of_users = ("student", "teacher", "tutor", "end")
-
-    answer = input("Podaj komendę z dostepnych: ")
-
-    if answer not in types_of_users:
-        print("Niewłaściwa komenda.")
-        continue
-
-    if answer not in types_of_users:
-        print("Niewłaściwy typ użytkownika.")
-        continue
-    elif answer == "end":
+    types_of_users = ["student <imię nazwisko>", "teacher <imię nazwisko>", "tutor <imię nazwisko>", "end"]
+    answer = input(f"Podaj komendę z dostępnych - {types_of_users}: ")
+    if answer == "end":
         break
-
-    elif answer == "student":
-        first_name = input("Podaj imię: ")
-        last_name = input("Podaj nazwisko: ")
+    elif answer.startswith("student"):
+        answ = list(answer.split(" "))
+        print(answ)
+        first_name = answ[1]
+        last_name = answ[2]
         class_type = input("Podaj nazwę klasy: ")
         filtered = list(filter(lambda x: x.name == class_type, list_of_classes))
         if filtered:
@@ -42,10 +31,11 @@ while True:
             new_class.add_student(student)
             list_of_classes.append(new_class)
         if student not in list_of_students:
-            list_of_students.append(student)  # chyba do poprawki!!!
-    elif answer == "teacher":
-        first_name = input("Podaj imię: ")
-        last_name = input("Podaj nazwisko: ")
+            list_of_students.append(student)
+    elif answer.startswith("teacher"):
+        answ = list(answer.split(" "))
+        first_name = answ[1]
+        last_name = answ[2]
         subject_name = input("Podaj nazwę przedmiotu: ")
         teacher = Teacher(first_name, last_name, subject_name)
         while True:
@@ -63,12 +53,12 @@ while True:
                     new_class.add_teacher(teacher)
                     list_of_classes.append(new_class)
                     teacher.add_class_name(new_class)
-        if teacher not in list_of_teachers:     # to źle
+        if teacher not in list_of_teachers:
             list_of_teachers.append(teacher)
-
-    elif answer == "tutor":
-        first_name = input("Podaj imię: ")
-        last_name = input("Podaj nazwisko: ")
+    elif answer.startswith("tutor"):
+        answ = list(answer.split(" "))
+        first_name = answ[1]
+        last_name = answ[2]
         tutor = Tutor(first_name, last_name)
         while True:
             class_type = input("Podaj nazwy klas w kolejnych linijkach: ")
@@ -85,13 +75,12 @@ while True:
                     new_class.tutor = tutor
                     list_of_classes.append(new_class)
                     tutor.add_class_name(new_class)
-        if tutor not in list_of_tutors:     # chyba poprawka
-            list_of_tutors.append(tutor)
+            if tutor not in list_of_tutors:
+                list_of_tutors.append(tutor)
 
+list_of_filtered_objects = [list(filter(lambda x: x.first_name == type_of[0] and x.last_name == type_of[1], list_of_students)), list(filter(lambda x: x.first_name == type_of[0] and x.last_name == type_of[1], list_of_teachers)), list(filter(lambda x: x.first_name == type_of[0] and x.last_name == type_of[1], list_of_tutors)), list(filter(lambda x: x.name == type_of[0], list_of_classes))]
 
-list_of_filtered_objects_ = [list(filter(lambda x: x.first_name == type_of[0] and x.last_name == type_of[1], list_of_students)), list(filter(lambda x: x.first_name == type_of[0] and x.last_name == type_of[1], list_of_teachers)), list(filter(lambda x: x.first_name == type_of[0] and x.last_name == type_of[1], list_of_tutors)),list(filter(lambda x: x.name == type_of[0], list_of_classes))]
-
-for el in list_of_filtered_objects_:
+for el in list_of_filtered_objects:
     if el:
         searched_object = el[0]
         if isinstance(searched_object, Student):
