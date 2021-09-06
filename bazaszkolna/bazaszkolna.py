@@ -15,7 +15,7 @@ while type_of in TYPE:
 
     types_of_users = ("student", "teacher", "tutor", "end")
 
-    answer = input("Podaj komendę z dostepnych: ") 
+    answer = input("Podaj komendę z dostepnych: ")
 
     if answer not in types_of_users:
         print("Niewłaściwa komenda.")
@@ -31,21 +31,18 @@ while type_of in TYPE:
         first_name = input("Podaj imię: ")
         last_name = input("Podaj nazwisko: ")
         class_type = input("Podaj nazwę klasy: ")
-        filtered = list(filter(lambda x: x.name==class_type, list_of_classes))
+        filtered = list(filter(lambda x: x.name == class_type, list_of_classes))
         if filtered:
             x = filtered[0]
             student = Student(first_name, last_name, x)
             x.add_student(student)
-            
         else:
             new_class = Class_Name(class_type)
             student = Student(first_name, last_name, new_class)
             new_class.add_student(student)
             list_of_classes.append(new_class)
-            
         if student not in list_of_students:
-            list_of_students.append(student) # chyba do poprawki!!! 
-
+            list_of_students.append(student)  # chyba do poprawki!!!
     elif answer == "teacher":
         first_name = input("Podaj imię: ")
         last_name = input("Podaj nazwisko: ")
@@ -56,7 +53,7 @@ while type_of in TYPE:
             if class_type == "":
                 break
             else:
-                filtered = list(filter(lambda x: x.name==class_type, list_of_classes))
+                filtered = list(filter(lambda x: x.name == class_type, list_of_classes))
                 if filtered:
                     x = filtered[0]
                     x.add_teacher(teacher)
@@ -78,7 +75,7 @@ while type_of in TYPE:
             if class_type == "":
                 break
             else:
-                filtered = list(filter(lambda x: x.name==class_type, list_of_classes))
+                filtered = list(filter(lambda x: x.name == class_type, list_of_classes))
                 if filtered:
                     x = filtered[0]
                     x.tutor = tutor
@@ -94,20 +91,18 @@ while type_of in TYPE:
 if type_of == "student":
     first_name = input("Podaj imię: ")
     last_name = input("Podaj nazwisko: ")
-    filtered = list(filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_students))
+    filtered = list(filter(lambda x: x.first_name == first_name and x.last_name == last_name, list_of_students))
     if filtered:
         this_student = filtered[0]
-        teachers_of_student=this_student.class_name.teachers
-        subjects=this_student.class_name.show_subjects()
+        teachers_of_student = this_student.class_name.teachers
+        subjects = this_student.class_name.show_subjects()
     else:
         print("Nie ma takiego ucznia.")
     print(f"Nauczyciele to: {teachers_of_student} i prowadzą przedmioty: {subjects}.")
-    
-
 elif type_of == "teacher":
     first_name = input("Podaj imię nauczyciela: ")
-    last_name = input("Podaj nazwisko nauczyciela: ")    
-    filtered = list(filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_teachers))
+    last_name = input("Podaj nazwisko nauczyciela: ")
+    filtered = list(filter(lambda x: x.first_name == first_name and x.last_name == last_name, list_of_teachers))
     if filtered:
         this_teacher = filtered[0]
         x = this_teacher.classes
@@ -119,17 +114,17 @@ elif type_of == "teacher":
 elif type_of == "tutor":
     first_name = input("Podaj imię wychowawcy: ")
     last_name = input("Podaj nazwisko wychowawcy: ")
-    filtered = list(filter(lambda x: x.first_name==first_name and x.last_name==last_name, list_of_tutors))
+    filtered = list(filter(lambda x: x.first_name == first_name and x.last_name == last_name, list_of_tutors))
     if filtered:
         tutor = filtered[0]
         students_list = tutor.show_students()
         print(f"Lista uczniów, których prowadzi wychowawca to: {students_list}")
     else:
-        print(f"Nie ma takiego tutora.")
+        print("Nie ma takiego tutora.")
 
 elif type_of == "class_name":
     class_name = input("Podaj nazwę klasy: ")
-    filtered = list(filter(lambda x: x.name==class_name, list_of_classes))
+    filtered = list(filter(lambda x: x.name == class_name, list_of_classes))
     if filtered:
         class_type = filtered[0]
         tutor_of_class = class_type.tutor
