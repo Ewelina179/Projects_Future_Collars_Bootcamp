@@ -7,9 +7,7 @@ magazyn_dict = {}
 logs = []
 
 file = sys.argv[1]
-product_id = sys.argv[2]
-price = float(sys.argv[3])
-current_amount = int(sys.argv[4])
+
 
 with open(file, "r") as fd:
     line = fd.readline()
@@ -18,7 +16,7 @@ with open(file, "r") as fd:
 
 with open(file, "r") as fd:
     for line in fd.readlines()[1:]:
-        splitted_line = line.split(";") 
+        splitted_line = line.split(";")
         product = splitted_line[0]
         product_amount = int(splitted_line[1])
         product_price = float(splitted_line[2])
@@ -57,6 +55,7 @@ while argument in COMMANDS:
             logs.append(log)
             #parameters.append(change_in_account)
             #parameters.append(comment)
+        
     elif answer == "zakup":
         product_id = input("Podaj identyfikator produktu: ")
         price = float(input("Podaj cenę jednostkową: "))
@@ -78,7 +77,7 @@ while argument in COMMANDS:
                     magazyn_dict[product_id]={'amount': amount + current_amount, "price": price}
                 log = f"Stan magazynowy produktu {product_id} podniesiono o liczbę {current_amount}. Saldo wynosi: {saldo}" 
                 logs.append(log)
-                #parameters.extend([product_id, price, current_amount])
+                #parameters.extend([product_id, price, current_amount]
     elif answer == "sprzedaz":
         product_id = input("Podaj identyfikator produktu: ")
         price = float(input("Podaj cenę jednostkową: "))
@@ -99,28 +98,20 @@ while argument in COMMANDS:
                 amount = magazyn_dict[product_id]['amount']
                 magazyn_dict[product_id]={'amount': amount - current_amount, 'price': price}
                 log = f"Stan magazynowy produktu {product_id} zmniejszono o liczbę {current_amount}. Saldo wynosi: {saldo}." 
+                print(log)
                 logs.append(log)
                 #parameters.extend([product_id, price, current_amount])
 
-if price < 0 or current_amount < 0:
-        print("Liczba sprzedanych sztuk nie może być ujemna. Cena produktu nie może być ujemna.")
-if not magazyn_dict.get(product_id):
-    print(f"W magazynie nie ma takiego produktu: {product_id}")
-else:
-    if magazyn_dict[product_id]['amount'] < current_amount:
-        print("Brak wystarczającej liczby sztuk produktu.")
-    else:
-        saldo += price * current_amount
-        amount = magazyn_dict[product_id]['amount']
-        magazyn_dict[product_id]={'amount': amount - current_amount, 'price': price}
-        log = f"Stan magazynowy produktu {product_id} zmniejszono o liczbę {current_amount}. Saldo wynosi: {saldo}." 
-        print(log)
-        logs.append(log)
-        #parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])]) 
-    #print(f"Podane podczas działania programu parametry: {parameters}.")
+for el in sys.argv[2:]:
+        x = magazyn_dict.get(el)
+        if x:
+            print(f"Stan magazynowy dla produktu {el} wynosi: {x['amount']}.")
+        else:
+            print(f"Nie ma wskazanego produktu: {el}.")
+
 
 with open("warehouse.txt", "w") as fd:
-    fd.write("saldo" + ";" + str(saldo) +"\n")
+    fd.write("saldo" + ";" + str(saldo) + ";" +"\n")
     for key, value in magazyn_dict.items():
         x = str(key) + ";" + str(value['amount']) + ";" + str(value['price']) + "\n"
         fd.write(x)
@@ -128,3 +119,6 @@ with open("warehouse.txt", "w") as fd:
 with open("logs.txt", "a") as fd:
     for el in logs:
         fd.write(el)
+
+with open ("parameters", "a"):
+    pass
