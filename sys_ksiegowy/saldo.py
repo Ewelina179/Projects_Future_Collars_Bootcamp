@@ -1,9 +1,12 @@
 import sys
+from operator import attrgetter
+
 from my_context_manager import FileManager
+from warehouse import Product, Warehouse, main_warehouse
 
 from all_func import change_saldo
 
-magazyn_dict = {}
+warehouse_dict = {}
 logs = []
 
 file = sys.argv[1]
@@ -17,11 +20,9 @@ with FileManager(file, "r") as fd:
 with FileManager(file, "r") as fd:
     for line in fd.readlines()[1:]:
         splitted_line = line.split(";")
-        product = splitted_line[0]
-        product_amount = int(splitted_line[1])
-        product_price = float(splitted_line[2])
-        magazyn_dict[product] = {'amount':product_amount, 'price': product_price}
-
+        product = Product( name = splitted_line[0], amount = int(splitted_line[1]), price = float(splitted_line[2]))
+        main_warehouse.add_product(product)
+print(main_warehouse.products)
 with FileManager("logs.txt", "r") as fd:
     for line in fd.readlines():
         logs.append(line)
@@ -70,12 +71,13 @@ while argument in COMMANDS:
                 continue
             else:
                 saldo -= total_price
-                if not magazyn_dict.get(product_id):
-                    magazyn_dict[product_id] = {"amount":current_amount, "price": price}
+                if product_id not in main_warehouse.lst_of_product_names():
+                    product = (product_id, current_amount, price)
+                    main_warehouse.add_product(product)
                 else:
-                    amount = magazyn_dict[product_id]['amount']
-                    magazyn_dict[product_id]={'amount': amount + current_amount, "price": price}
-                log = f"Stan magazynowy produktu {product_id} podniesiono o liczbę {current_amount}. Saldo wynosi: {saldo}" 
+                    product = [x for x in main_warehouse.products if x.name == product_id][0]
+                    product.change_amount(current_amount)
+                log = f"Stan magazynowy produktu {product} podniesiono o liczbę {current_amount}. Saldo wynosi: {saldo}" 
                 logs.append(log)
                 #parameters.extend([product_id, price, current_amount]) # czy program ma zapisywać wszystkie parametry, czy tylko te, które miały wpływ na saldo? nie do końca rozumiem punkt V. właściwie wcale nie rozumiem.
 
@@ -87,18 +89,18 @@ while argument in COMMANDS:
         if price < 0 or current_amount < 0:
             print("Liczba sprzedanych sztuk nie może być ujemna. Cena produktu nie może być ujemna.")
             continue
-        if not magazyn_dict.get(product_id):
+        if product_id not in main_warehouse.lst_of_product_names():
             print(f"W magazynie nie ma takiego produktu: {product_id}")
             continue
         else:
-            if magazyn_dict[product_id]['amount'] < current_amount:
+            product = [x for x in main_warehouse.products if x.name == product_id][0]
+            if product.amount < current_amount:
                 print("Brak wystarczającej liczby sztuk produktu.")
                 continue
             else:
                 saldo += price * current_amount
-                amount = magazyn_dict[product_id]['amount']
-                magazyn_dict[product_id]={'amount': amount - current_amount, 'price': price}
-                log = f"Stan magazynowy produktu {product_id} zmniejszono o liczbę {current_amount}. Saldo wynosi: {saldo}." 
+                product.change_amount(-current_amount)
+                log = f"Stan magazynowy produktu {product.name} zmniejszono o liczbę {current_amount}. Saldo wynosi: {saldo}." 
                 print(log)
                 logs.append(log)
                 #parameters.extend([product_id, price, current_amount])
@@ -109,10 +111,11 @@ else:
     new_saldo = str(change_saldo(change_in_account, saldo)) # nie jestem pewna czy to w tym miejscu. 
     log = f"Zmieniono wartość salda o {change_in_account * 0.01} złotych. Saldo po zmianie wynosiło {new_saldo}."
     logs.append(log)
+    print(log)
     with FileManager("warehouse.txt", "w") as fd:
         fd.write("saldo" + ";" + new_saldo + ";" +"\n")
-        for key, value in magazyn_dict.items():
-            x = str(key) + ";" + str(value['amount']) + ";" + str(value['price']) + "\n"
+        for product in main_warehouse.products:
+            x = str(product.name) + ";" + str(product.amount) + ";" + str(product.price) + "\n"
             fd.write(x)
 
 with FileManager("logs.txt", "a") as fd:
