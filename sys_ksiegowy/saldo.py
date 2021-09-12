@@ -1,5 +1,5 @@
 import sys
-from zakup import INNER_COMMANDS
+from my_context_manager import FileManager
 
 from all_func import change_saldo
 
@@ -9,12 +9,12 @@ logs = []
 file = sys.argv[1]
 change_in_account = int(sys.argv[2])
 
-with open(file, "r") as fd:
+with FileManager(file, "r") as fd:
     line = fd.readline()
     sline = line.split(";")
     saldo = float(sline[1])
 
-with open(file, "r") as fd:
+with FileManager(file, "r") as fd:
     for line in fd.readlines()[1:]:
         splitted_line = line.split(";")
         product = splitted_line[0]
@@ -22,7 +22,7 @@ with open(file, "r") as fd:
         product_price = float(splitted_line[2])
         magazyn_dict[product] = {'amount':product_amount, 'price': product_price}
 
-with open("logs.txt", "r") as fd:
+with FileManager("logs.txt", "r") as fd:
     for line in fd.readlines():
         logs.append(line)
 
@@ -109,13 +109,13 @@ else:
     new_saldo = str(change_saldo(change_in_account, saldo)) # nie jestem pewna czy to w tym miejscu. 
     log = f"Zmieniono wartość salda o {change_in_account * 0.01} złotych. Saldo po zmianie wynosiło {new_saldo}."
     logs.append(log)
-    with open("warehouse.txt", "w") as fd:
+    with FileManager("warehouse.txt", "w") as fd:
         fd.write("saldo" + ";" + new_saldo + ";" +"\n")
         for key, value in magazyn_dict.items():
             x = str(key) + ";" + str(value['amount']) + ";" + str(value['price']) + "\n"
             fd.write(x)
 
-with open("logs.txt", "a") as fd:
+with FileManager("logs.txt", "a") as fd:
     for el in logs:
         fd.write(el)
 
