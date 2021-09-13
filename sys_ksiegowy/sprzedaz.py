@@ -33,12 +33,12 @@ else:
         #parameters.extend([sys.argv[2], float(sys.argv[3]), int(sys.argv[4])]) 
     #print(f"Podane podczas działania programu parametry: {parameters}.")
 
-with FileManager("warehouse.txt", "w") as fd:
+with FileManager(file, "w") as fd:
     fd.write("saldo" + ";" + str(work_with_context_manager.main_saldo) +"\n")
     for product in main_warehouse.products:
             x = str(product.name) + ";" + str(product.amount) + ";" + str(product.price) + "\n"
             fd.write(x)
 
-with FileManager("logs.txt", "a") as fd:
+with FileManager("logs.txt", "w") as fd:
     for el in work_with_context_manager.logs:
         fd.write(el)

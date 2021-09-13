@@ -34,12 +34,12 @@ else:
         print(log)
         work_with_context_manager.logs.append(log)
         #parameters.extend([product_id, price, current_amount])
-with open("warehouse.txt", "w") as fd:
+with open(file, "w") as fd:
     fd.write("saldo" + ";" + str(work_with_context_manager.main_saldo) +"\n")
     for product in main_warehouse.products:
             x = str(product.name) + ";" + str(product.amount) + ";" + str(product.price) + "\n"
             fd.write(x)
 
-with open("logs.txt", "a") as fd:
+with open("logs.txt", "w") as fd:
     for el in work_with_context_manager.logs:
         fd.write(el)

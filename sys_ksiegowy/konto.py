@@ -13,7 +13,7 @@ get_command(argument)
 
 print(f"Saldo wynosi {work_with_context_manager.main_saldo}.")
 
-with FileManager("logs.txt", "a") as fd:
+with FileManager("logs.txt", "w") as fd:
     for el in work_with_context_manager.logs:
         fd.write(el)
 

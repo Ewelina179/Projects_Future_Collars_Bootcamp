@@ -24,8 +24,8 @@ else:
     log = f"Zmieniono wartość salda o {change_in_account * 0.01} złotych. Saldo po zmianie wynosiło {new_saldo}."
     print(log)
     work_with_context_manager.logs.append(log)
-    with FileManager("warehouse.txt", "w") as fd:
-        fd.write("saldo" + ";" + new_saldo + ";" +"\n")
+    with FileManager(file, "w") as fd:
+        fd.write("saldo" + ";" + new_saldo +"\n")
         for product in main_warehouse.products:
             x = str(product.name) + ";" + str(product.amount) + ";" + str(product.price) + "\n"
             fd.write(x)

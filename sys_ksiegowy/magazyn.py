@@ -19,13 +19,13 @@ for el in sys.argv[2:]:
             print(f"Nie ma wskazanego produktu: {el}.")
 
 
-with FileManager("warehouse.txt", "w") as fd:
+with FileManager(file, "w") as fd:
     fd.write("saldo" + ";" + str(work_with_context_manager.main_saldo) + ";" +"\n")
     for product in main_warehouse.products:
             x = str(product.name) + ";" + str(product.amount) + ";" + str(product.price) + "\n"
             fd.write(x)
 
-with FileManager("logs.txt", "a") as fd:
+with FileManager("logs.txt", "w") as fd:
     for el in work_with_context_manager.logs:
         fd.write(el)
 
