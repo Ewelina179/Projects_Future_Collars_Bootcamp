@@ -17,12 +17,15 @@ with FileManager(file, "r") as fd:
     sline = line.split(";")
     saldo = float(sline[1])
 
+
 with FileManager(file, "r") as fd:
     for line in fd.readlines()[1:]:
         splitted_line = line.split(";")
         product = Product( name = splitted_line[0], amount = int(splitted_line[1]), price = float(splitted_line[2]))
         main_warehouse.add_product(product)
+
 print(main_warehouse.products)
+
 with FileManager("logs.txt", "r") as fd:
     for line in fd.readlines():
         logs.append(line)
@@ -118,9 +121,10 @@ else:
             x = str(product.name) + ";" + str(product.amount) + ";" + str(product.price) + "\n"
             fd.write(x)
 
-with FileManager("logs.txt", "a") as fd:
+
+with FileManager("logs.txt", "w") as fd:
     for el in logs:
-        fd.write(el)
+        fd.write(el) # z trybem "a" za każdym razem czytało cały plik i w tym momencie go dopisywało. stąd taki rozmiar pliku.
 
 with open ("parameters", "a"):
     pass
