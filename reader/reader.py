@@ -10,8 +10,8 @@ to_change = sys.argv[3:]
 n=[]
 for el in to_change:
     b = el.split(",")
-    c = [int(x) for x in b[1:]]
-    d = b[0], c[0], c[1]
+    c = [int(x) for x in b[:-1]]
+    d = c[0], c[1], b[2]
     n.append(d)
 print(n)
 
@@ -27,14 +27,11 @@ print(lst)
 
 
 for el in n:
-    lst[el[1]][el[2]]= el[0]
+    lst[el[0]][el[1]]= el[2]
 
 print(lst)
 
-""""
-with open(file_to_write, "w", newline="") as f:
-	writer = csv.writer(f)
-    for line in lst:
-        writer.writerow(line)
-"""
+with open(file_to_write, 'w', newline="") as f: 
+    csvwriter = csv.writer(f) 
+    csvwriter.writerows(lst)
 
