@@ -4,7 +4,7 @@ from pprint import pprint
 
 API_KEY = sys.argv[1]
 
-def get_total_precipitation(date):
+def get_precipitation(date):
 
     url = "https://weatherapi-com.p.rapidapi.com/forecast.json"
 
@@ -12,7 +12,7 @@ def get_total_precipitation(date):
 
     headers = {
         'x-rapidapi-host': "weatherapi-com.p.rapidapi.com",
-        'x-rapidapi-key': "99df7a01f9mshba03b7647dfd958p10b4ccjsn447755faa676"
+        'x-rapidapi-key': API_KEY
         }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
