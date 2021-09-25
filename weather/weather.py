@@ -1,14 +1,11 @@
 import sys
 import requests
 import datetime
-from precip import get_total_precipitation
+from precip import get_precipitation
 from pprint import pprint
+from check_date import check_date
 
-current_date = datetime.datetime.today()
-#print(current_date)
-next_day = current_date + datetime.timedelta(days=1)
-#print(next_day)
-
+next_day = str(datetime.date.today() + datetime.timedelta(days=1))
 
 weathers = []
 with open("weather.txt", "r") as f:
@@ -18,31 +15,31 @@ with open("weather.txt", "r") as f:
             weathers.append(data)
 try:
     date = sys.argv[2]
-    #print(date)
 except:
-    date = next_day # ten poqoduje, że jak zły dzień podam to bierze kolejny dzień???
-    #print(date)
+    date = next_day
 
-print(weathers)
+tuple_date = tuple(map(int, date.split('-')))
+check = check_date(tuple_date[0], tuple_date[1], tuple_date[2])
 
-lst = [x for x in weathers if date in x]
-print(lst)
-precipitation = get_total_precipitation(date)
-print(precipitation)
-if lst:
-    print(lst[0][1])
-# tu jest "\n"
-elif precipitation:
-    if precipitation > 0:
-        answer = "Będzie padać"
+lst_of_dates = [x for x in weathers if date in x]
+
+if check:
+    if lst_of_dates:
+        print(lst_of_dates[0][1])
     else:
-        answer = "Nie będzie padać"
-    with open('weather.txt', 'w') as f:
-        f.write(str(date) + ";" + str(answer) + "\n")
-        for el in weathers:
-            x = str(el[0]) + ";" + str(el[1])
-            f.write(x)
-    print(precipitation)
-    print(answer)
+        try:
+            precipitation = get_precipitation(date)
+            if precipitation > 0:
+                answer = "Będzie padać"
+            else:
+                answer = "Nie będzie padać"
+            with open('weather.txt', 'w') as f:
+                f.write(str(date) + ";" + str(answer) + "\n")
+                for el in weathers:
+                    x = str(el[0]) + ";" + str(el[1])
+                    f.write(x)
+            print(answer)
+        except:
+            print("Nie wiem.") # kiedy dzień spoza dat dla których API ma pogodę
 else:
-    print("Nie wiem.")
+    print("Niepoprawna data.") # zły format lub nie ma takiej w kalendarzu
