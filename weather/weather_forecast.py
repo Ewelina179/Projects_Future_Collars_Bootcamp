@@ -3,6 +3,8 @@ from datetime import datetime
 import sys
 import os
 
+# next_day = str(datetime.date.today() + datetime.timedelta(days=1))
+
 
 class WeatherForecast:
     def __init__(self, api_key, date = str(datetime.today().date())): # chyba domyślnie następny dzień
@@ -37,7 +39,6 @@ class WeatherForecast:
         else:
             pass
 
-
     def get_from_file(self):
         weathers = {}
         with open("weather.txt", "r") as f: # zmienić na filepath
@@ -53,25 +54,24 @@ class WeatherForecast:
                     x = str(key) + ";" + str(value)
                     f.write(x)
 
-    def check_is_valid(date):
+    def _is_valid_date(date):
         pass
 
     def __getitem__(self, key):
         try:
             return self.info[key]
         except:
-                # self.check_is_valid_date
+                # self._is_valid_date
                 self.data = self.get_data(key)
                 self.save_to_file(key, self.get_rain_info())
-                return self.get_rain_info()
-
+                return self.get_rain_info() # chyba inaczej. dodać z api do kolekcji. dopiero wtedy odczytać
+    
     def items(self):
         for key, value in self.info.items(): # to ma być z tego cachowanego - 
             yield(key, value)
 
     def __iter__(self):
-        for date in self.info.keys():
-            yield(date)
+        return iter(self.info.keys())
 
 
 # wf[date] da odpowiedź na temat pogody dla podanej daty (według specyfikacji z poprzedniego zadania)
