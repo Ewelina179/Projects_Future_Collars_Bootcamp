@@ -1,15 +1,12 @@
 import requests
-from datetime import datetime
+import datetime
 import sys
 import os
 
-# next_day = str(datetime.date.today() + datetime.timedelta(days=1))
-
-
 class WeatherForecast:
-    def __init__(self, api_key, date = str(datetime.today().date())): # chyba domyślnie następny dzień
+    def __init__(self, api_key):
         self.api_key = api_key
-        self.date = date
+        self.date = str(datetime.date.today() + datetime.timedelta(days=1))
         self.data = self.get_data(self.date)
         self.fp = open("weather.txt")
         self.info = self.get_from_file()
@@ -27,21 +24,28 @@ class WeatherForecast:
         response = requests.request("GET", url, headers=headers, params=querystring)
         return response.json()
 
+    def get_data_from_api(self, key):
+        self.data = self.get_data(key)
+        if self.get_rain_info():
+            self.save_to_file(key, self.get_rain_info())
+        return self.get_rain_info()
+
     def get_rain_info(self):
-        total_precipitation = float(self.data["forecast"]['forecastday'][0]['day']["totalprecip_mm"])
-        return self.get_rain_chance(total_precipitation)
+        try:
+            total_precipitation = float(self.data["forecast"]['forecastday'][0]['day']["totalprecip_mm"])
+            return self.get_rain_chance(total_precipitation)
+        except IndexError:
+            print("Dane na temat pogody obecnie niedostępne.")
 
     def get_rain_chance(self, total_precipitation):
         if total_precipitation > 0:
             return "Będzie padać"
         elif total_precipitation <= 0:
             return "Nie będzie padać"
-        else:
-            pass
 
     def get_from_file(self):
         weathers = {}
-        with open("weather.txt", "r") as f: # zmienić na filepath
+        with open("weather.txt", "r") as f:
             for line in f.readlines():
                 splitted_line = line.split(";")
                 weathers[splitted_line[0]] = splitted_line[1]
@@ -54,40 +58,27 @@ class WeatherForecast:
                     x = str(key) + ";" + str(value)
                     f.write(x)
 
-    def _is_valid_date(date):
-        pass
+    def get_data_from(self, key):
+        if self.info.get(key):
+            return self.info[key]
+        return self.get_data_from_api(key)
 
     def __getitem__(self, key):
-        try:
-            return self.info[key]
-        except:
-                # self._is_valid_date
-                self.data = self.get_data(key)
-                self.save_to_file(key, self.get_rain_info())
-                return self.get_rain_info() # chyba inaczej. dodać z api do kolekcji. dopiero wtedy odczytać
+        return self.get_data_from(key)
     
     def items(self):
-        for key, value in self.info.items(): # to ma być z tego cachowanego - 
+        for key, value in self.info.items():
             yield(key, value)
 
     def __iter__(self):
         return iter(self.info.keys())
 
-
-# wf[date] da odpowiedź na temat pogody dla podanej daty (według specyfikacji z poprzedniego zadania)
-# wf.items() zwróci generator tupli w formacie (data, pogoda) dla już zcache’owanych rezultatów przy wywołaniu
-# wf to iterator zwracający wszystkie daty, dla których znana jest pogoda
-
 wf = WeatherForecast(sys.argv[1])
 
-print(wf["2021-10-15"])
+print(wf["2021-10-10"])
 
 for x in wf.items():
     print(x)
 
 for x in wf:
     print(x)
-
-print(wf.info)
-print(wf["2021-10-10"])
-print(wf.get_rain_info())
