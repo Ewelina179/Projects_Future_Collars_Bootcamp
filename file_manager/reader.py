@@ -17,10 +17,10 @@ def change_file():
         file_obj = Manager(c=True) # powinno zwrócić obiekt Csv_Manager-a
         file_obj.file = file
         file_obj.file_to_write = file_to_write
-        file_obj.read_file()
+        file_obj.read_file_from()
         file_obj.show_file()
         file_obj.change_file(to_change)
-        file_obj.save_to_file(to_change)
+        file_obj.save_to_file(to_change) # tylko że dst może mieć inny format!!! i w innym miejscu też być
 
      # to wyżej - i jak pasuje to niech stworzy adekwatną instancję i odpali metody
 
