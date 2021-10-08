@@ -1,8 +1,9 @@
-import csv, json
+import csv, json, pickle
 
 class File_Manager:
-    def init(self, file):
+    def init(self, file, file_to_write):
         self.file = file
+        self.file_to_write = file_to_write
 
     def show_file(self):
         print(self.read_file_from())
@@ -29,7 +30,6 @@ class File_Manager:
 class Csv_Manager(File_Manager):
     def init(self, file):
         super().__init__()
-        self.file_to_write = file
 
     def read_file_from(self):
         return super().read_file_from()
@@ -55,14 +55,13 @@ class Csv_Manager(File_Manager):
 class Json_Manager(File_Manager):
     def init(self, file):
         super().__init__()
-        self.file_to_write = file
 
     def read_file_from(self):
         return super().read_file_from()
 
     def read_file(self):
         content_of_file = []
-        with open(self.file, newline="") as f:
+        with open(self.file, "r") as f:
             data = json.load(f)
             for line in data:
                 content_of_file.append(line)
@@ -74,22 +73,20 @@ class Json_Manager(File_Manager):
         y[x[0]][x[1]]= x[2]
 
         with open(self.file_to_write, 'w', newline="") as f: 
-            pass
-
+            json.dumps(y)
 
 class Pickle_Manager(File_Manager):
     def init(self, file):
         super().__init__()
-        self.file_to_write = file
     
     def read_file_from(self):
         return super().read_file_from()
 
-    def read_file(self):
+    def read_file(self): # nie działa...
         content_of_file = []
-        with open(self.file, newline="") as f:
-            reader = csv.reader(f)
-            for line in reader:
+        with open(self.file, "rb") as f:
+            data = pickle.load(f)
+            for line in data:
                 content_of_file.append(line)
         return content_of_file
 
@@ -98,8 +95,8 @@ class Pickle_Manager(File_Manager):
         y = self.read_file_from()
         y[x[0]][x[1]]= x[2]
 
-        with open(self.file_to_write, 'w', newline="") as f: 
-            pass 
+        with open(self.file_to_write, 'w') as f: 
+            pickle.dumps(y)
 
 
 class Manager(File_Manager):

@@ -1,3 +1,4 @@
+from pickle import OBJ
 import sys
 import os
 
@@ -7,7 +8,7 @@ file = sys.argv[1]
 file_to_write = sys.argv[2]
 to_change = sys.argv[3:]
 
-FORMATS = [".csv", ".json", ".pickle"]
+FORMATS = [".csv", ".json", "ckle"]
 # tu pobierze argumenty, wyłap wyjątki podczas odpalania argumentów i zaincjuj klasy
 # i w sumie to wszędzie to samo. może getattr?
 
@@ -16,6 +17,7 @@ def change_file():
     if z:
         file_obj = Manager(c=True) # powinno zwrócić obiekt Csv_Manager-a
         file_obj.file = file
+        print(file_obj.file)
         file_obj.file_to_write = file_to_write
         file_obj.read_file_from()
         file_obj.show_file()
