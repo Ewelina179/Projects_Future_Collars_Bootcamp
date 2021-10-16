@@ -7,16 +7,16 @@ class Manager:
         self.file = file
         self.saldo = self.get_saldo()
         self.products = self.get_products()
-        self.show = self.show_file()
+        #self.show = self.show_file()
         self.variables = args # tupla z jednym elementem - listą
         
         self.actions = {
                     "saldo": self.change_saldo, # bez nawiasu. wykonuje się przy execute!!!
-                    "sprzedaż": self.sale,
+                    "sprzedaz": self.sale,
                     "zakup": self.purchase,
                     "konto": self.account,
-                    "magazyn": self.current_amount(),
-                    "przegląd": ""
+                    "magazyn": self.current_amount,
+                    "przegląd": "dodać logi"
                 }
         self.to_file = self.save_changes()
 
@@ -55,10 +55,11 @@ class Manager:
             print(f"Stan magazynowy produktu: {amount}")
 
     def assign(self, name):
-        def decorate(cb):
-            self.actions[name] = cb # weż tę funckję? - przypisało funkcję. ale niżej się ona execute
+        def decorate(func):
+            self.actions[name]() # weż tę funckję? - przypisało funkcję. ale niżej się ona execute
             # bierze z tej funckji te argumenty???
-            return cb
+            self.save_changes()
+            return func
         return decorate
 
     def get_saldo(self):
@@ -86,12 +87,10 @@ class Manager:
                 x = str(key + ";" + str(value["amount"]) + ";" + str(value["price"]) + "\n")
                 fd.write(x)
     
-    def execute(self, name):
+    def execute(self, name): # w sumie to nie używam. nie ogarniam.
         if name not in self.actions:
             print("Action not defined")
         else:
-            self.actions[name]()
+            # self.actions[name](self)
             print("To tutaj.")
-            print(self.saldo)
             self.save_changes()
-            # kiedy zapisać zmiany w pliku??????
