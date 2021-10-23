@@ -1,7 +1,7 @@
 import sys
 from acc.accountant import Manager
 
-manager = Manager(file = sys.argv[1])
+manager = Manager(file_logs = sys.argv[1])
 
 @manager.assign("przeglad")
 def my_func(manager):

@@ -38,7 +38,7 @@ class Manager:
         amount = int(self.variables[0][2])
         self.saldo -= price * amount
         self.products[product_id]['amount'] += amount
-        x = f"Stan konta: {self.saldo}, stan magazynu: {self.products}"
+        x = f"Zakupiono produkt: {product_id}, w cenie: {price}, w ilości: {amount}"
         self.logs.append(x)
 
     def account(self):
