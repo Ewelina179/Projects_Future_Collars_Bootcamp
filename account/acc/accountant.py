@@ -1,8 +1,7 @@
 class Manager:
-
-    def __init__(self, *args, file):
+    def __init__(self, *args, file = "accountant.txt", file_logs="logs.txt"):
         self.file = file
-        self.file_logs = 'logs.txt'
+        self.file_logs = file_logs
         self.saldo = self.get_saldo()
         self.products = self.get_products()
         self.logs = self.get_logs()
@@ -79,7 +78,7 @@ class Manager:
         with open(self.file_logs, "r") as fd:
                 for line in fd.readlines():
                     splitted_line = line.split(";")
-                    logs.append(splitted_line[0] + "\n")
+                    logs.append(splitted_line[0])
         return logs
 
     def show_logs(self):
@@ -89,11 +88,11 @@ class Manager:
         with open(self.file, "w") as fd:
             fd.write("saldo" + ";" + str(self.saldo) + ";" +"\n")
             for key,value in self.products.items():
-                x = str(key + ";" + str(value["amount"]) + ";" + str(value["price"]) + "\n")
+                x = str(key + ";" + str(value["amount"]) + ";" + str(value["price"]) + ";" + "\n")
                 fd.write(x)
 
     def save_logs(self):
         with open(self.file_logs, "w") as fd:
             for el in self.logs:
-                x = str(el)
+                x = str(str(el) + ";" + "\n")
                 fd.write(str(x))
