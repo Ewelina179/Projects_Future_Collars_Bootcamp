@@ -1,49 +1,46 @@
-import sys
-
 class Manager:
 
     def __init__(self, *args, file):
-        
         self.file = file
+        self.file_logs = 'logs.txt'
         self.saldo = self.get_saldo()
         self.products = self.get_products()
-        #self.show = self.show_file()
-        self.variables = args # tupla z jednym elementem - listą
-        
+        self.logs = self.get_logs()
+        self.variables = args 
         self.actions = {
-                    "saldo": self.change_saldo, # bez nawiasu. wykonuje się przy execute!!!
+                    "saldo": self.change_saldo,
                     "sprzedaz": self.sale,
                     "zakup": self.purchase,
                     "konto": self.account,
                     "magazyn": self.current_amount,
-                    "przegląd": "dodać logi"
+                    "przeglad": self.show_logs
                 }
         self.to_file = self.save_changes()
 
     def change_saldo(self):
-        print("Cześć!")
         change_in_account = int(self.variables[0][0])
         comment = self.variables[0][1]
-        self.saldo += change_in_account*0.01
-        print(f"Saldo wynosi: {self.saldo}.")
+        self.saldo += round(change_in_account*0.01, 2)
+        x = f"Saldo wynosi: {self.saldo}, komentarz do zmiany: {comment}"
+        self.logs.append(x)
 
     def sale(self):
-        print("Cześć, tu sprzedaż!")
         product_id = str(self.variables[0][0])
         price = int(self.variables[0][1])
         amount = int(self.variables[0][2])
         self.saldo += price * amount
         self.products[product_id]['amount'] -= amount
-        print(f"Stan konta: {self.saldo}, stan magazynu: {self.products}")
+        x = f"Dodano produkt: {product_id}, w cenie: {price}, w ilości {amount}."
+        self.logs.append(x)
 
     def purchase(self):
-        print("Cześć, tu zakup!")
         product_id = str(self.variables[0][0])
         price = int(self.variables[0][1])
         amount = int(self.variables[0][2])
         self.saldo -= price * amount
         self.products[product_id]['amount'] += amount
-        print(f"Stan konta: {self.saldo}, stan magazynu: {self.products}")
+        x = f"Stan konta: {self.saldo}, stan magazynu: {self.products}"
+        self.logs.append(x)
 
     def account(self):
         print(f"Stan konta to: {self.saldo}.")
@@ -56,9 +53,9 @@ class Manager:
 
     def assign(self, name):
         def decorate(func):
-            self.actions[name]() # weż tę funckję? - przypisało funkcję. ale niżej się ona execute
-            # bierze z tej funckji te argumenty???
+            self.actions[name]()
             self.save_changes()
+            self.save_logs()
             return func
         return decorate
 
@@ -67,7 +64,7 @@ class Manager:
                 line = fd.readline()
                 sline = line.split(";")
                 main_saldo = float(sline[1])
-        return main_saldo
+        return round(main_saldo,2)
 
     def get_products(self):
         products = {}
@@ -77,8 +74,16 @@ class Manager:
                     products[splitted_line[0]] = {"amount": int(splitted_line[1]), "price": float(splitted_line[2])}
         return products
 
-    def show_file(self):
-        print(f'Saldo to: {self.saldo} a produkty {self.products}')
+    def get_logs(self):
+        logs = []
+        with open(self.file_logs, "r") as fd:
+                for line in fd.readlines():
+                    splitted_line = line.split(";")
+                    logs.append(splitted_line[0] + "\n")
+        return logs
+
+    def show_logs(self):
+        print(f'Historia wprowadzonych zmian: {self.logs}')
 
     def save_changes(self):
         with open(self.file, "w") as fd:
@@ -86,11 +91,9 @@ class Manager:
             for key,value in self.products.items():
                 x = str(key + ";" + str(value["amount"]) + ";" + str(value["price"]) + "\n")
                 fd.write(x)
-    
-    def execute(self, name): # w sumie to nie używam. nie ogarniam.
-        if name not in self.actions:
-            print("Action not defined")
-        else:
-            # self.actions[name](self)
-            print("To tutaj.")
-            self.save_changes()
+
+    def save_logs(self):
+        with open(self.file_logs, "w") as fd:
+            for el in self.logs:
+                x = str(el)
+                fd.write(str(x))
