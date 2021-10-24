@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+
+    <title></title>
+    </head>
+    <body>
+        <section>
+            Aktualne saldo:
+            {{saldo}}
+            <br>
+            Stan magazynu:
+            {{magazyn}}
+        </section>
+        <section>
+            <h1>Formularz zakupu</h1>
+        <form action="/" method="POST">
+            <div class="form-group">
+                <label class="form-label" for="input-example-1">Nazwa produktu</label>
+                <input class="form-input" type="text" id="input-example-1" placeholder="Nazwa produktu" name="Z_product_name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="input-example-2">Cena produktu</label>
+                <input class="form-input" type="number" id="input-example-2" placeholder="Cena produktu" name="Z_price">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="input-example-2">Liczba sztuk</label>
+                <input class="form-input" type="number" id="input-example-2" placeholder="Liczba sztuk" name="Z_liczba">
+            </div>
+            <input type="submit" class="form-input input-lg" />
+        </form>
+    </section>
+
+    <section>
+        <h1>Formularz sprzedaży</h1>
+    <form action="/" method="POST">
+        <div class="form-group">
+            <label class="form-label" for="input-example-1">Name</label>
+            <input class="form-input" type="text" id="input-example-1" placeholder="Nazwa produktu" name="S_product_name">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="input-example-2">Cena produktu</label>
+            <input class="form-input" type="number" id="input-example-2" placeholder="Cena produktu" name="S_price">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="input-example-2">Liczba sztuk</label>
+            <input class="form-input" type="number" id="input-example-2" placeholder="Liczba sztuk" name="S_liczba">
+        </div>
+        <input type="submit" class="form-input input-lg" />
+    </form>
+</section>
+
+<section>
+    <h1>Formularz zmiany salda</h1>
+<form action="/" method="POST">
+    <div class="form-group">
+        <label class="form-label" for="input-example-1">Name</label>
+        <input class="form-input" type="text" id="input-example-1" placeholder="Nazwa produktu" name="saldo_comment">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="input-example-2">City</label>
+        <input class="form-input" type="number" id="input-example-2" placeholder="Cena produktu" name="saldo_amount">
+    </div>
+    <input type="submit" class="form-input input-lg" />
+
+</form>
+</section>
+
+
+
+    </body>
+</html>

@@ -1,0 +1,16 @@
+Stan konta: 1401.420000000001, stan magazynu: {'produkt1': {'amount': 7, 'price': 1.0}, 'produkt2': {'amount': 4, 'price': 10.0}, 'produkt3': {'amount': 6, 'price': 8.0}};
+Stan konta: 1400.420000000001, stan magazynu: {'produkt1': {'amount': 8, 'price': 1.0}, 'produkt2': {'amount': 4, 'price': 10.0}, 'produkt3': {'amount': 6, 'price': 8.0}};
+Saldo wynosi: 1400.430000000001, komentarz do zmiany bo tak;
+Saldo wynosi: 1400.440000000001, komentarz do zmiany w;
+Saldo wynosi: 1401.440000000001, komentarz do zmiany 1;
+Saldo wynosi: 1401.460000000001, komentarz do zmiany bo tak;
+Zakupiono produkt: produkt1, w cenie: 1, w ilo�ci: 1;
+Zakupiono produkt: produkt1, w cenie: 1, w ilo�ci: 1;
+Zakupiono produkt: produkt1, w cenie: 1, w ilo�ci: 1;
+Dodano produkt: produkt2, w cenie: 1, w ilo�ci 1.;
+Dodano produkt: produkt2, w cenie: 1, w ilo�ci 1.;
+Saldo wynosi: 1401.46, komentarz do zmiany: nie wiem;
+Zakupiono produkt: produkt1, w cenie: 1, w ilo�ci: 1;
+Dodano produkt: produkt2, w cenie: 1, w ilo�ci 1.;
+Dodano produkt: produkt1, w cenie: 1, w ilo�ci 1.;
+Saldo wynosi: 1402.57, komentarz do zmiany: hej;
