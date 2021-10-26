@@ -28,35 +28,19 @@ def home():
         "saldo_amount" : request.form.get("saldo_amount")
     }
 
-    if zakup["product_name"]:
-        manager.variables = ((zakup["product_name"], zakup["price"], zakup["amount"]))
-        x = "zakup"
-        @manager.assign(x)
-        def my_func(manager):
-            manager.save_changes()
-            manager.save_logs()
-            return render_template("index.html", saldo=manager.saldo, magazyn=manager.products)
-        my_func(manager)
-    if sprzedaz["product_name"]:
-        manager.variables = ((sprzedaz["product_name"], sprzedaz["price"], sprzedaz["amount"]))
-        x = "sprzedaz"
-        @manager.assign(x)
-        def my_func(manager):
-            manager.save_changes()
-            manager.save_logs()
-            return render_template("index.html", saldo=manager.saldo, magazyn=manager.products)
-        my_func(manager)
-    if saldo["saldo_amount"]:
-        manager.variables = ((saldo["saldo_comment"], saldo["saldo_amount"]))
-        x = "saldo"
-        @manager.assign(x)
-        def my_func(manager):
-            manager.save_changes()
-            manager.save_logs()
-            return render_template("index.html", saldo=manager.saldo, magazyn=manager.products)
-        my_func(manager)
-    else:
-        return render_template("index.html", saldo=manager.saldo, magazyn=manager.products)
+    def switching():
+        if zakup["product_name"]:
+            return manager.purchase(zakup["product_name"], zakup["price"], zakup["amount"])
+        elif sprzedaz["product_name"]:
+            return manager.sale(sprzedaz["product_name"], sprzedaz["price"], sprzedaz["amount"])
+        elif saldo["saldo_amount"]:
+            return manager.change_saldo((saldo["saldo_comment"], saldo["saldo_amount"]))
+    # jeszcze walidacja - poza formatem danych w formularzu i istnieniem ww....
+
+    switching()
+    manager.save_changes()
+    manager.save_logs()
+    return render_template("index.html", saldo=manager.saldo, magazyn=manager.products)
 
 
 @app.route('/history', defaults={'line_from': None, 'line_to': None})
