@@ -16,30 +16,63 @@ class Manager:
                 }
         self.to_file = self.save_changes()
 
-    def change_saldo(self):
-        change_in_account = int(self.variables[1])
-        comment = self.variables[0]
-        self.saldo += round(change_in_account*0.01, 2)
-        x = f"Saldo wynosi: {self.saldo}, komentarz do zmiany: {comment}"
-        self.logs.append(x)
+    def validate_change_in_account(self, change):
+        try:
+            return float(change)
+        except ValueError:
+            return None
 
-    def sale(self):
-        product_id = str(self.variables[0])
-        price = int(self.variables[1])
-        amount = int(self.variables[2])
-        self.saldo += price * amount
-        self.products[product_id]['amount'] -= amount
-        x = f"Dodano produkt: {product_id}, w cenie: {price}, w ilości {amount}."
-        self.logs.append(x)
+    def validate_amount(self, amount):
+        try:
+            return int(amount)
+        except ValueError:
+            return None
 
-    def purchase(self):
-        product_id = str(self.variables[0])
-        price = int(self.variables[1])
-        amount = int(self.variables[2])
-        self.saldo -= price * amount
-        self.products[product_id]['amount'] += amount
-        x = f"Zakupiono produkt: {product_id}, w cenie: {price}, w ilości: {amount}"
-        self.logs.append(x)
+    def check_is_product(self, product_id):
+        try:
+            return self.products[product_id]
+        except:
+            return None
+
+    def is_available_product(self, product_id, amount):
+        if self.products[product_id]['amount'] >= amount:
+            return True
+        return False
+
+    def change_saldo(self, change_in_account, comment):
+        change_in_account = self.validate_change_in_account(change_in_account)
+        if change_in_account and comment:
+            self.saldo += round(change_in_account*0.01, 2)
+            x = f"Saldo wynosi: {self.saldo}, komentarz do zmiany: {comment}"
+            self.logs.append(x)
+            return x
+        return "Podano niepoprawne dane."
+
+    def sale(self, product_id, price, amount):
+        validated_product_id = self.check_is_product(product_id)
+        validated_price = self.validate_change_in_account(price)
+        validated_amount = self.validate_amount(amount)
+        if validated_product_id and validated_price and validated_amount:
+            if self.is_available_product(product_id, validated_amount):
+                self.saldo += validated_price * validated_amount
+                self.products[product_id]['amount'] -= validated_amount
+                x = f"Sprzedano produkt: {product_id}, w cenie: {price}, w ilości {amount}."
+                self.logs.append(x)
+                return x
+            return "Brak wystarczającej ilości produktów."
+        return "Podano niepoprawne dane."
+
+    def purchase(self, product_id, price, amount):
+        validated_product_id = self.check_is_product(product_id)
+        validated_price = self.validate_change_in_account(price)
+        validated_amount = self.validate_amount(amount)
+        if validated_product_id and validated_price and validated_amount:
+            self.saldo -= validated_price * validated_amount
+            self.products[product_id]['amount'] += validated_amount
+            x = f"Zakupiono produkt: {product_id}, w cenie: {price}, w ilości: {amount}"
+            self.logs.append(x)
+            return x
+        return "Podano niepoprawne dane."
 
     def account(self):
         print(f"Stan konta to: {self.saldo}.")
