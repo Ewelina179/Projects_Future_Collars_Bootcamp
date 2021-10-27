@@ -1,22 +1,42 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8"/>
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
-
-    <title></title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css\style.css') }}">
     </head>
     <body>
-        <section>
-            Aktualne saldo:
-            {{saldo}}
+            {% if comment: %}
+            <h2>{{comment}}</h2>
+            {% endif %}
+        <br>
+           <h2>Aktualne saldo: {{saldo}}</h2> 
             <br>
-            Stan magazynu:
-            {{magazyn}}
-        </section>
+            <h2>Stan magazynu</h2>
+            <section>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Produkt</th>
+                        <th>Ilość</th>
+                        <th>Cena</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in magazyn.items() %}
+                      <tr class="active">
+                        <td>{{key}}</td>
+                        <td>{{value["amount"]}}</td>
+                        <td>{{value["price"]}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            </section>
+  <br>
         <section>
+            <div class="column col-8 col-mx-auto">
             <h1>Formularz zakupu</h1>
         <form action="/" method="POST">
             <div class="form-group">
@@ -35,9 +55,11 @@
             </div>
             <input type="submit" class="form-input input-lg" />
         </form>
+    </div>
     </section>
-
+<br>
     <section>
+        <div class="column col-8 col-mx-auto">
         <h1>Formularz sprzedaży</h1>
     <form action="/" method="POST">
         <div class="form-group">
@@ -56,26 +78,25 @@
         </div>
         <input type="submit" class="form-input input-lg" />
     </form>
+    </div>
 </section>
-
+<br>
 <section>
+    <div class="column col-8 col-mx-auto">
     <h1>Formularz zmiany salda</h1>
 <form action="/" method="POST">
     <div class="form-group">
-        <label class="form-label" for="input-example-1">Name</label>
-        <input class="form-input" type="text" id="input-example-1" placeholder="Nazwa produktu" name="saldo_comment">
+        <label class="form-label" for="input-example-1">Komentarz</label>
+        <input class="form-input" type="text" id="input-example-1" placeholder="Komentarz" name="saldo_comment">
     </div>
 
     <div class="form-group">
-        <label class="form-label" for="input-example-2">City</label>
-        <input class="form-input" type="number" id="input-example-2" placeholder="Cena produktu" name="saldo_amount">
+        <label class="form-label" for="input-example-2">Wartość</label>
+        <input class="form-input" type="number" id="input-example-2" placeholder="Wartość" name="saldo_amount">
     </div>
     <input type="submit" class="form-input input-lg" />
-
 </form>
+</div>
 </section>
-
-
-
     </body>
 </html>

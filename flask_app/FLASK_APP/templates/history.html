@@ -1,17 +1,19 @@
-
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8"/>
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
-
-    <title></title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css\style.css') }}">
     </head>
     <body>
 
-Stan magazynu:
-{{logs}}
+<h2>Historia:</h2>
+<ol>
+    {% for el in logs %}
+    <h5><li>{{el}}</li></h5> 
+{% endfor %}
+</ol>
+
 </body>
 </html>
