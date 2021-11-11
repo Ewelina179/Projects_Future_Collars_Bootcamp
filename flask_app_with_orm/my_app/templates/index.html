@@ -7,98 +7,43 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
         
     </head>
-    {context.products}
     <body>
-            {% if comment: %}
-            <p id="a">{{comment}}</p>
-            {% endif %}
         <br>
            <h1>Aktualne saldo: {{saldo}}</h1> 
             <br>
-            <h1>Stan magazynu</h1>
-            <section>
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Produkt</th>
-                        <th>Ilość</th>
-                        <th>Cena</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% for key, value in magazyn.items() %}
-                      <tr class="active">
-                        <td>{{key}}</td>
-                        <td>{{value["amount"]}}</td>
-                        <td>{{value["price"]}}</td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-            </section>
+           <h1>Stan magazynu poczeka</h1>
   <br>
         <section>
-            <div class="column col-8 col-mx-auto">
             <h1>Formularz zakupu</h1>
-        <form action="/" method="POST">
-            <div class="form-group">
-                <label class="form-label" for="input-example-1">Nazwa produktu</label>
-                <input class="form-input" type="text" id="input-example-1" placeholder="Nazwa produktu" name="Z_product_name">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="input-example-2">Cena produktu</label>
-                <input class="form-input" type="number" id="input-example-2" placeholder="Cena produktu" name="Z_price">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="input-example-2">Liczba sztuk</label>
-                <input class="form-input" type="number" id="input-example-2" placeholder="Liczba sztuk" name="Z_liczba">
-            </div>
-            <input type="submit" class="form-input input-lg" />
-        </form>
+            <form method="post">
+                {{formPurchase.hidden_tag()}}
+                {{formPurchase.name.label}}{{formPurchase.name()}}<br>
+                {{formPurchase.price.label}}{{formPurchase.price()}}<br>
+                {{formPurchase.amount.label}}{{formPurchase.amount()}}<br>
+                {{formPurchase.submit()}}
+            </form>
     </div>
     </section>
 <br>
     <section>
-        <div class="column col-8 col-mx-auto">
         <h1>Formularz sprzedaży</h1>
-    <form action="/" method="POST">
-        <div class="form-group">
-            <label class="form-label" for="input-example-1">Name</label>
-            <input class="form-input" type="text" id="input-example-1" placeholder="Nazwa produktu" name="S_product_name">
-        </div>
-
-        <div class="form-group">
-            <label class="form-label" for="input-example-2">Cena produktu</label>
-            <input class="form-input" type="number" id="input-example-2" placeholder="Cena produktu" name="S_price">
-        </div>
-
-        <div class="form-group">
-            <label class="form-label" for="input-example-2">Liczba sztuk</label>
-            <input class="form-input" type="number" id="input-example-2" placeholder="Liczba sztuk" name="S_liczba">
-        </div>
-        <input type="submit" class="form-input input-lg" />
-    </form>
-    </div>
+        <form method="post">
+            {{formSale.hidden_tag()}}
+            {{formSale.name.label}}{{formSale.name()}}<br>
+            {{formSale.price.label}}{{formSale.price()}}<br>
+            {{formSale.amount.label}}{{formSale.amount()}}<br>
+            {{formSale.submit()}}
+        </form>
 </section>
 <br>
 <section>
-    <div class="column col-8 col-mx-auto">
     <h1>Formularz zmiany salda</h1>
-<form action="/" method="POST">
-    <div class="form-group">
-        <label class="form-label" for="input-example-1">Komentarz</label>
-        <input class="form-input" type="text" id="input-example-1" placeholder="Komentarz" name="saldo_comment">
-    </div>
-
-    <div class="form-group">
-        <label class="form-label" for="input-example-2">Wartość</label>
-        <input class="form-input" type="number" id="input-example-2" placeholder="Wartość" name="saldo_amount">
-    </div>
-    <input type="submit" class="form-input input-lg" />
-</form>
-</div>
+    <form method="post">
+        {{formSaldo.hidden_tag()}}
+        {{formSaldo.value.label}}{{formSaldo.value()}}<br>
+        {{formSaldo.comment.label}}{{formSaldo.comment()}}<br>
+        {{formSaldo.submit()}}
+    </form>
 </section>
     </body>
 </html>
