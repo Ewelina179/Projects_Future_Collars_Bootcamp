@@ -4,16 +4,48 @@
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
         <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
         
     </head>
     <body>
         <br>
            <h1>Aktualne saldo: {{saldo}}</h1> 
             <br>
-           <h1>Stan magazynu poczeka</h1>
+           <h1>Stan magazynu</h1>
+            <section>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Produkt</th>
+                        <th>Ilość</th>
+                        <th>Cena</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in product.items() %}
+                      <tr class="active">
+                        <td>{{key}}</td>
+                        <td>{{value["amount"]}}</td>
+                        <td>{{value["price"]}}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            </section>
   <br>
-        <section>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+    {% for message in messages %}
+      {% for key, value in message.items() %}
+            {{value}}
+            {% endfor %}
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+        <div>
             <h1>Formularz zakupu</h1>
             <form method="post">
                 {{formPurchase.hidden_tag()}}
@@ -23,9 +55,8 @@
                 {{formPurchase.submit()}}
             </form>
     </div>
-    </section>
 <br>
-    <section>
+    <div>
         <h1>Formularz sprzedaży</h1>
         <form method="post">
             {{formSale.hidden_tag()}}
@@ -34,9 +65,9 @@
             {{formSale.amount.label}}{{formSale.amount()}}<br>
             {{formSale.submit()}}
         </form>
-</section>
+    </div>
 <br>
-<section>
+<div>
     <h1>Formularz zmiany salda</h1>
     <form method="post">
         {{formSaldo.hidden_tag()}}
@@ -44,6 +75,6 @@
         {{formSaldo.comment.label}}{{formSaldo.comment()}}<br>
         {{formSaldo.submit()}}
     </form>
-</section>
+</div>
     </body>
 </html>
