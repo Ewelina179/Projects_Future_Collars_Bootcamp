@@ -6,11 +6,9 @@ class Saldo(db.Model):
     date = db.Column(db.DateTime(), default=datetime.utcnow)
     value = db.Column(db.Integer, nullable=False)
 
-    def __str__(self):
-        actual_saldo = db.session.query(self).filter(self.value).order_by((self.date.desc())).first()
-        x = actual_saldo.value
-        print(x)
-
+    def __show_actual_saldo__(self):
+        actual_saldo = db.session.query(Saldo).filter(Saldo.value).order_by(Saldo.date.desc()).first()
+        return actual_saldo.value
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,7 +17,11 @@ class Product(db.Model):
     price = db.Column(db.Integer, nullable=False)
 
     def show_products(self):
-        return db.session.query(self).all()
+        products = db.session.query(Product).all()
+        dict_of_products = {}
+        for product in products:
+            dict_of_products[product.name] = {"amount": product.amount, "price": product.price}
+        return dict_of_products
 
 
 class History(db.Model):
@@ -28,11 +30,13 @@ class History(db.Model):
     content = db.Column(db.Text(), nullable=False)
 
     def show_history(self):
-        pass
+        return db.session.query(History.content).all()
 
-    def show_history_from_to(self):
-        pass
-
+    @classmethod
+    def show_history_from_to(cls, line_from, line_to):
+        y = cls.query.filter(cls.id.between((line_from),line_to)).all()
+        contents = [x.content for x in y]
+        return contents
 
 class Manager:
 
@@ -67,19 +71,23 @@ class Manager:
 
     def sale(self, product_id, price, amount):
         saldo = db.session.query(Saldo).filter(Saldo.value).order_by((Saldo.date.desc())).first()
+        print("sale")
         saldo.value += price * amount
-        # gdzie nazwa produktu jest taka w bazie to go zmień
-        product = db.session.query(Product).filter(Product.name == product_id).first() # chyba źle query
+        product = db.session.query(Product).filter(Product.name == product_id).first()
         product.amount -= amount
+        print(product.amount)
         self.save_to_db(saldo)
         self.save_to_db(product)
         self.commit_changes_sale(product_id, price, amount)
 
     def purchase(self, product_id, price, amount):
+        print("purchase")
+        print(amount)
         saldo = db.session.query(Saldo).filter(Saldo.value).order_by((Saldo.date.desc())).first()
         saldo.value -= price * amount
-        product = self.db.session.query(self.product.name == product_id).first()
+        product = db.session.query(Product).filter(Product.name == product_id).first()
         product.amount += amount
+        print(product.amount)
         self.save_to_db(saldo)
         self.save_to_db(product)
         self.commit_changes_purchase(product_id, price, amount)
