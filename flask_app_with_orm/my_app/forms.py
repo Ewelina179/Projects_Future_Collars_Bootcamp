@@ -1,40 +1,49 @@
 from flask_wtf import FlaskForm
-from wtforms import ValidationError
+from wtforms.validators import ValidationError
 from wtforms.fields.core import IntegerField, StringField
 from wtforms.fields.simple import SubmitField
 from wtforms.validators import DataRequired
 
 from models import Saldo, Product
-
+    
 class SaldoForm(FlaskForm):
     value = IntegerField('Value', validators=[DataRequired()])
     comment = StringField('Comment', validators=[DataRequired()])
     submit = SubmitField('Zmień saldo.')
 
-    def check_is_enough(self, field):
-        pass
+    def validate_value(form, value):
+        saldo = Saldo.query.filter(Saldo.value).order_by(Saldo.date.desc()).first()
+        value = value.data
+        if saldo.value - value < 0:
+            raise ValidationError("Brak wystarczającej ilości środków na koncie.")
+
+def is_product(form, field):
+    x = Product.query.filter_by(name=field.data).first()
+    if not x:
+        raise ValidationError("Brak produktu.")
 
 class SaleForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    price = IntegerField('Price', validators=[DataRequired()])
-    amount = IntegerField('Amount', validators=[DataRequired()])
-    submit = SubmitField('Zakup')
-
-    def is_available_product(self, field):
-        x = Product.query.filter_by(name=field.data.name).first()
-        if x.amount >= field.data.amount:
-            raise ValidationError('Brak wystarczającej ilości produktu.')
-
-    def is_product(self, field):
-        x = Product.query.filter_by(name=field.data.name).first()
-        if not x:
-            raise ValidationError('Brak produktu o podanej nazwie.')
-
-class PurchaseForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired(), is_product])
     price = IntegerField('Price', validators=[DataRequired()])
     amount = IntegerField('Amount', validators=[DataRequired()])
     submit = SubmitField('Sprzedaż')
 
-    def check_is_enough_money_to_buy(self, field):
-        pass
+    def validate_amount(form, amount):
+        x = Product.query.filter_by(name=form.name.data).first()
+        amount=amount.data
+        if x and x.amount <= amount: # inaczej warunkować?
+            raise ValidationError('Brak wystarczającej ilości produktu.')
+
+class PurchaseForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), is_product])
+    price = IntegerField('Price', validators=[DataRequired()])
+    amount = IntegerField('Amount', validators=[DataRequired()])
+    submit = SubmitField('Zakup')
+
+    def validate_amount(form, amount):
+        x = Product.query.filter_by(name=form.name.data).first()
+        saldo = Saldo.query.filter(Saldo.value).order_by(Saldo.date.desc()).first()
+        amount=amount.data
+        price=form.price.data
+        if x and amount*price >= saldo.value:
+            raise ValidationError('Brak wystarczających środków na koncie.')
