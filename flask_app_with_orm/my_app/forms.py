@@ -35,10 +35,10 @@ class SaleForm(FlaskForm):
             raise ValidationError('Brak wystarczającej ilości produktu.')
 
 class PurchaseForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired(), is_product])
-    price = IntegerField('Price', validators=[DataRequired()])
-    amount = IntegerField('Amount', validators=[DataRequired()])
-    submit = SubmitField('Zakup')
+    namep = StringField('Name', validators=[DataRequired(), is_product])
+    pricep = IntegerField('Price', validators=[DataRequired()])
+    amountp = IntegerField('Amount', validators=[DataRequired()])
+    submitp = SubmitField('Zakup')
 
     def validate_amount(form, amount):
         x = Product.query.filter_by(name=form.name.data).first()
