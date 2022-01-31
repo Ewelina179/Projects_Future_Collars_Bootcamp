@@ -1,4 +1,0 @@
-saldo;1477.09;
-produkt1;2;1.0
-produkt2;4;10.0
-produkt3;6;8.0
