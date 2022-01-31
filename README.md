@@ -18,15 +18,17 @@ Application to manage warehouse and account.
   - git clone
   - cd flask_app_with_orm
   - pip install -r requirements.txt
+  - cd my_app
   - flask db init
   - flask db migrate
   - flask db upgrade
+  - set FLASK_APP=app.py
   - flask run
 
 <h7> Technological stack: </h7>
 - Flask with WTForm to validate forms
 - sqlite
-- ORM
+- SQLAlchemy
 
 # Weather
 
