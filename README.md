@@ -35,4 +35,4 @@ Application to manage warehouse and account.
 Program to check if it will be rain.
 
 <h7> How to use: </h7>
-<h10> python weather.py < API KEY from rapidapi.com > < optionally date, current date by default >
+<h10> python weather.py < API KEY from rapidapi.com > < optionally date (format YYYY-MM-DD) or current date by default >
